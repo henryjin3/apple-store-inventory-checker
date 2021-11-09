@@ -106,13 +106,13 @@ request(options, function (error, response) {
     notificationMessage = 'No models found.';
   }
 
-  const message = hasError ? 'Possible error?' : notificationMessage;
-  notifier.notify({
-    title: 'MacBook Pro Availability',
-    message: message,
-    sound: hasError || inventory,
-    timeout: false,
-  });
+  // const message = hasError ? 'Possible error?' : notificationMessage;
+  // notifier.notify({
+  //   title: 'MacBook Pro Availability',
+  //   message: message,
+  //   sound: hasError || inventory,
+  //   timeout: false,
+  // });
 
   // Log time at end
   console.log(`\nGenerated: ${new Date().toLocaleString()}`);
