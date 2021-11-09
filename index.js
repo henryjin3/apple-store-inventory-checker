@@ -1,30 +1,30 @@
-const request = require("request");
-const notifier = require("node-notifier");
+const request = require('request');
+const notifier = require('node-notifier');
 
-const { SKUS, SKUS_AUSTRALIA, COUNTRIES } = require("./constants");
+const { SKUS, SKUS_AUSTRALIA, COUNTRIES } = require('./constants');
 const args = process.argv.slice(2);
 
-let favorites = ["MMQX3LL/A", "MKH53LL/A", "MK1A3LL/A", "MK1H3LL/A"];
+let favorites = ['MMQX3LL/A', 'MKH53LL/A', 'MK233LL/A', 'MMQW3LL/A'];
 // Australia uses different SKUs, if passing in AU as the country code,
 // this favorites list will be used instead of the default
-let favoritesAustralia = ["MMQX3X/A","MKH53X/A","MMQW3X/A","MK233X/A"];
+let favoritesAustralia = ['MMQX3X/A', 'MKH53X/A', 'MMQW3X/A', 'MK233X/A'];
 
-const control = "MYD92LL/A";
-let storeNumber = "R172";
-let state = "CO";
-let countryCode = "";
+const control = 'MYD92LL/A';
+let storeNumber = 'R172';
+let state = 'CO';
+let countryCode = '';
 let skuList = SKUS;
 
 if (args.length > 0) {
   const passedStore = args[0];
-  const passedCountry = args[1] ?? "US";
-  if (passedStore.charAt(0) === "R") {
+  const passedCountry = args[1] ?? 'US';
+  if (passedStore.charAt(0) === 'R') {
     // All retail store numbers start with R
     storeNumber = passedStore;
     state = null;
   }
   countryCode = COUNTRIES[passedCountry];
-  if (countryCode === "/au") {
+  if (countryCode === '/au') {
     skuList = SKUS_AUSTRALIA;
     favorites = favoritesAustralia;
   }
@@ -33,10 +33,10 @@ if (args.length > 0) {
 const query =
   Object.keys(skuList)
     .map((k, i) => `parts.${i}=${encodeURIComponent(k)}`)
-    .join("&") + `&searchNearby=true&store=${storeNumber}`;
+    .join('&') + `&searchNearby=true&store=${storeNumber}`;
 
 let options = {
-  method: "GET",
+  method: 'GET',
   url: `https://www.apple.com${countryCode}/shop/fulfillment-messages?` + query,
 };
 
@@ -63,11 +63,11 @@ request(options, function (error, response) {
         hasStoreSearchError = product.storeSearchEnabled !== true;
 
         if (key === control && hasStoreSearchError !== true) {
-          hasStoreSearchError = product.pickupDisplay !== "available";
+          hasStoreSearchError = product.pickupDisplay !== 'available';
         } else {
           productStatus.push(`${value}: ${product.pickupDisplay}`);
 
-          if (product.pickupDisplay !== "unavailable") {
+          if (product.pickupDisplay !== 'unavailable') {
             console.log(`${value} in stock at ${store.storeName}`);
             let count = skuCounter[key] ?? 0;
             count += 1;
@@ -87,11 +87,11 @@ request(options, function (error, response) {
 
   const inventory = Object.entries(skuCounter)
     .map(([key, value]) => `${skuList[key]}: ${value}`)
-    .join(" | ");
+    .join(' | ');
 
   console.log('\nInventory counts');
   console.log('----------------');
-  console.log(inventory.replaceAll(" | ","\n"));
+  console.log(inventory.replace(' | ', '\n'));
   let hasUltimate = Object.keys(skuCounter).some(
     (r) => favorites.indexOf(r) >= 0
   );
@@ -99,16 +99,16 @@ request(options, function (error, response) {
 
   if (inventory) {
     notificationMessage = `${
-      hasUltimate ? "FOUND ULTIMATE! " : ""
+      hasUltimate ? 'FOUND ULTIMATE! ' : ''
     }Some models found: ${inventory}`;
   } else {
     console.log(statusArray);
-    notificationMessage = "No models found.";
+    notificationMessage = 'No models found.';
   }
 
-  const message = hasError ? "Possible error?" : notificationMessage;
+  const message = hasError ? 'Possible error?' : notificationMessage;
   notifier.notify({
-    title: "MacBook Pro Availability",
+    title: 'MacBook Pro Availability',
     message: message,
     sound: hasError || inventory,
     timeout: false,
