@@ -92,28 +92,29 @@ request(options, function (error, response) {
   console.log('\nInventory counts');
   console.log('----------------');
   console.log(inventory.replace(' | ', '\n'));
-  let hasUltimate = Object.keys(skuCounter).some(
+  let hasFavorites = Object.keys(skuCounter).some(
     (r) => favorites.indexOf(r) >= 0
   );
   let notificationMessage;
 
   if (inventory) {
     notificationMessage = `${
-      hasUltimate ? 'FOUND ULTIMATE! ' : ''
+      hasFavorites ? 'FOUND ULTIMATE! ' : ''
     }Some models found: ${inventory}`;
   } else {
     console.log(statusArray);
     notificationMessage = 'No models found.';
   }
 
-  // const message = hasError ? 'Possible error?' : notificationMessage;
-  // notifier.notify({
-  //   title: 'MacBook Pro Availability',
-  //   message: message,
-  //   sound: hasError || inventory,
-  //   timeout: false,
-  // });
-
+  if (hasFavorites) {
+    const message = hasError ? 'Possible error?' : notificationMessage;
+    notifier.notify({
+      title: 'MacBook Pro Availability',
+      message: message,
+      sound: hasError || inventory,
+      timeout: false,
+    });
+  }
   // Log time at end
   console.log(`\nGenerated: ${new Date().toLocaleString()}`);
 });
