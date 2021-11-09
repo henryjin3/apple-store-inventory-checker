@@ -87,23 +87,24 @@ request(options, function (error, response) {
 
   const inventory = Object.entries(skuCounter)
     .map(([key, value]) => `${skuList[key]}: ${value}`)
-    .join(' | ');
+    .join('\n');
 
-  console.log('\nInventory counts');
-  console.log('----------------');
-  console.log(inventory.replace(' | ', '\n'));
   let hasFavorites = Object.keys(skuCounter).some(
     (r) => favorites.indexOf(r) >= 0
   );
   let notificationMessage;
 
   if (inventory) {
+    console.log('\nInventory counts');
+    console.log('----------------');
+    console.log(inventory);
+
     notificationMessage = `${
       hasFavorites ? 'FOUND ULTIMATE! ' : ''
     }Some models found: ${inventory}`;
   } else {
-    console.log(statusArray);
     notificationMessage = 'No models found.';
+    console.log(notificationMessage);
   }
 
   if (hasFavorites) {
