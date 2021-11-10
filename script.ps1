@@ -1,6 +1,4 @@
 while (1 -eq 1 ){
-  $command=npm run dev
-  Clear-Host
-  $command
+  npm run dev
   start-sleep -seconds 60
 }
