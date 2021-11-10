@@ -4,7 +4,7 @@ const notifier = require('node-notifier');
 const { SKUS, SKUS_AUSTRALIA, COUNTRIES } = require('./constants');
 const args = process.argv.slice(2);
 
-let favorites = ['MMQX3LL/A', 'MKH53LL/A', 'MK233LL/A', 'MMQW3LL/A'];
+let favorites = ['MK233LL/A', 'MMQW3LL/A'];
 // Australia uses different SKUs, if passing in AU as the country code,
 // this favorites list will be used instead of the default
 let favoritesAustralia = ['MMQX3X/A', 'MKH53X/A', 'MMQW3X/A', 'MK233X/A'];
