@@ -48,8 +48,44 @@ request(options, function (error, response) {
   let skuCounter = {};
   let hasStoreSearchError = false;
 
-  console.log('Inventory');
-  console.log('---------');
+  // Reset = "\x1b[0m"
+  // Bright = "\x1b[1m"
+  // Dim = "\x1b[2m"
+  // Underscore = "\x1b[4m"
+  // Blink = "\x1b[5m"
+  // Reverse = "\x1b[7m"
+  // Hidden = "\x1b[8m"
+
+  // FgBlack = "\x1b[30m"
+  // FgRed = "\x1b[31m"
+  // FgGreen = "\x1b[32m"
+  // FgYellow = "\x1b[33m"
+  // FgBlue = "\x1b[34m"
+  // FgMagenta = "\x1b[35m"
+  // FgCyan = "\x1b[36m"
+  // FgWhite = "\x1b[37m"
+
+  // BgBlack = "\x1b[40m"
+  // BgRed = "\x1b[41m"
+  // BgGreen = "\x1b[42m"
+  // BgYellow = "\x1b[43m"
+  // BgBlue = "\x1b[44m"
+  // BgMagenta = "\x1b[45m"
+  // BgCyan = "\x1b[46m"
+  // BgWhite = "\x1b[47m"
+
+  switch (storeNumber) {
+    case 'R437':
+      console.log('\x1b[34m', `Houston area inventory`);
+      break;
+    case 'R151':
+      console.log('\x1b[33m', `Southlake area inventory`);
+      break;
+    default:
+      console.log(`Other area inventory`);
+  }
+
+  console.log('\x1b[0m\x1b[2m', '---------');
   const statusArray = storesArray
     .flatMap((store) => {
       if (state && state !== store.state) return null;
@@ -68,7 +104,7 @@ request(options, function (error, response) {
           productStatus.push(`${value}: ${product.pickupDisplay}`);
 
           if (product.pickupDisplay !== 'unavailable') {
-            console.log(`${value} in stock at ${store.storeName}`);
+            console.log(`\x1b[32m`, `${value} in stock at ${store.storeName}`);
             let count = skuCounter[key] ?? 0;
             count += 1;
             skuCounter[key] = count;
@@ -95,16 +131,16 @@ request(options, function (error, response) {
   let notificationMessage;
 
   if (inventory) {
-    console.log('\nInventory counts');
-    console.log('----------------');
-    console.log(inventory);
+    // console.log('\nInventory counts');
+    // console.log('----------------');
+    // console.log(inventory);
 
     notificationMessage = `${
       hasFavorites ? 'FOUND ULTIMATE! ' : ''
     }Some models found: ${inventory}`;
   } else {
     notificationMessage = 'No models found.';
-    console.log(notificationMessage);
+    console.log('\x1b[2m', notificationMessage);
   }
 
   if (hasFavorites) {
